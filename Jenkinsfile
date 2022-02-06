@@ -1,20 +1,28 @@
+def gv
+
 pipeline {
 
   agent any
 
   stages {
+    stage('Load Groovy script') {
+      steps{
+        script {
+          gv = load "script.groovy"
+        }
+      }
+    }
     stage('Build image') {
       steps{
         script {
-          dockerImage = docker.build("vladsanyuk/ssdevopscc:custom-wordpress")
+          gv.buildImage()
         }
       }
     }
     stage('Push Image') {
       steps{
         script {
-          docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-            dockerImage.push()
+          gv.pushImage()
           }
         }
       }

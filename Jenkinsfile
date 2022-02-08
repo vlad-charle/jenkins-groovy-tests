@@ -12,13 +12,17 @@ pipeline {
         }
       }
     }
-    stage('Sonar code check') {
+    stage('SonarQube') {
+      environment {
+        scannerHome = tool 'SonarQubeScanner'
+      }
       steps {
-        script {
-          def scannerHome = tool 'SonarScanner';
-          withSonarQubeEnv('SQ') {
-            sh "${scannerHome}/bin/sonar-scanner"
-          }
+        withSonarQubeEnv('sonarqube') {
+          sh "${scannerHome}/bin/sonar-scanner"
+        }
+
+        timeout(time: 10, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
         }
       }
     }

@@ -12,6 +12,16 @@ pipeline {
         }
       }
     }
+    stage('Sonar code check') {
+      steps {
+        script {
+          def scannerHome = tool 'SonarScanner';
+          withSonarQubeEnv() {
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
+        }
+      }
+    }
     stage('Build image') {
       steps{
         script {
